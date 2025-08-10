@@ -50,15 +50,39 @@ int printLoggedInScreen(BankAccount account, BankAccount accounts[]) {
 
   system("cls");
   fflush(stdout);
+  do {
+    validChoice = false;
+    printf("Welcome back %s!\n", account.firstname);
+    printf("Press 1 to make a deposit\n");
+    printf("Press 2 to make a withdrawal\n");
+    printf("Press 3 to view transaction history\n");
+    printf("Press 4 to log out\n");
+    printf("Press 5 to exit\n");
+    printf("\nEnter a valid choice (1-5): ");
+    scanf("%d", &choice);
 
-  printf("Welcome to the back %49s\n", account.firstname);
-  printf("Press 1 to make a deposit");
-  printf("Press 2 to make a withdrawal");
-  printf("Press 3 to view transaction history");
-  printf("Press 4 to log out");
-  printf("Press 5 to exit");
-  printf("\nEnter a valid choice (1-5): ");
-  scanf("%d", &choice);
+    for (int i = 0; i < n; i++) {
+      if (choice == validChoices[i]) {
+        validChoice = true;
+      }
+    }
+  } while (!validChoice);
+
+  if (choice == 1) {
+
+  }
+  else if (choice == 2) {
+
+  }
+  else if (choice == 3) {
+
+  }
+  else if (choice == 4) {
+
+  }
+  else if (choice == 5) {
+
+  }
 
 
 
