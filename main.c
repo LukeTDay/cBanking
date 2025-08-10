@@ -11,6 +11,7 @@ typedef struct {
   char email[50];
   char password[50];
   float balance;
+  int transactionHistory[10];
 } BankAccount;
 
 int printWelcomeScreen() {
@@ -56,6 +57,7 @@ int printLoggedInScreen(BankAccount account, BankAccount accounts[]) {
   printf("Press 3 to view transaction history");
   printf("Press 4 to log out");
   printf("Press 5 to exit");
+  printf("\nEnter a valid choice (1-5): ");
   scanf("%d", &choice);
 
 
@@ -84,6 +86,12 @@ BankAccount createAccount(BankAccount accounts[], int size) {
 
   printf("Please enter your password:\n");fflush(stdout);
   scanf("%49s", account.password);
+
+  account.balance = 0;
+
+  for (int i = 0; i < 10; i++) {
+    account.transactionHistory[i] = 0;
+  }
 
   for (int i = 0; i < size; i++) {
     if (accounts[i].id == -1) {
@@ -146,7 +154,8 @@ BankAccount loginToAccount(BankAccount accounts[], int size) {
 int main() {
   BankAccount Accounts[100] = {-1};
   BankAccount activeAccount = {-1};
-
+  BankAccount tempAccount = {1,"Luke", "Day", "luke@gmail.com", "1234", 0};
+  activeAccount = tempAccount;
   while (true) {
     if (activeAccount.id != -1) {
       printLoggedInScreen(activeAccount, Accounts);
