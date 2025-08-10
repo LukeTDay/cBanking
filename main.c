@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <string.h>
 
 int printWelcomeScreen() {
   int choice;
@@ -16,7 +17,7 @@ int printWelcomeScreen() {
   printf("Press 3 to exit\n");
 
   do {
-    printf("Enter a valid choice (1, 2, 3 or 4): ");
+    printf("Enter a valid choice (1, 2 or 3): \n");fflush(stdout);
     scanf("%d", &choice);
     validChoice = false;
     //breaks if non int lol
@@ -32,7 +33,7 @@ int printWelcomeScreen() {
 
 void exitProgram() {
   system("cls");
-  printf("Thank you for your patronage");
+  printf("Thank you for your patronage\n");
   exit(0);
 }
 
@@ -47,17 +48,16 @@ typedef struct {
 BankAccount createAccount(BankAccount accounts[], int size) {
   BankAccount account;
 
-  system("cls");
-  printf("Please enter your first name:\n");
+  printf("Please enter your first name:\n");fflush(stdout);
   scanf("%49s", account.firstname);
 
-  printf("Please enter your last name:\n");
+  printf("Please enter your last name:\n");fflush(stdout);
   scanf("%49s", account.lastname);
 
-  printf("Please enter your email:\n");
+  printf("Please enter your email:\n");fflush(stdout);
   scanf("%49s", account.email);
 
-  printf("Please enter your password:\n");
+  printf("Please enter your password:\n");fflush(stdout);
   scanf("%49s", account.password);
 
   for (int i = 0; i < size; i++) {
@@ -76,24 +76,52 @@ BankAccount loginToAccount(BankAccount accounts[], int size) {
   char email[50];
   bool emailFound = false;
   BankAccount account;
+  system("cls");
   do {
-    system("cls");
-    printf("Please enter the email of your account, please be mindful of capitalization");
+    printf("Please enter the email of your account, please be mindful of capitalization");fflush(stdout);
     scanf("%49s", email);
 
+    if (strcmp(email, "create") == 0) {
+      createAccount(accounts, size);
+      continue;
+    }
+
     for (int i = 0; i < size; i++) {
-      if (accounts[i].email == email) {
+      if (strcmp(accounts[i].email, email) == 0) {
         emailFound = true;
         account = accounts[i];
       }
     }
+
+    if (!emailFound) {
+      printf("Your email was not found. Please try again.\n");fflush(stdout);
+      printf("If you need to create an account enter \"create\" next time you are prompted for a password\n");fflush(stdout);
+    }
   } while (!emailFound);
-  return account;
+
+  bool correctPassword = false;
+
+  do {
+    char enteredPassword[50];
+    printf("Please enter the password for the account associated with %s", account.email);fflush(stdout);
+    scanf("%49s", enteredPassword);
+
+    if (strcmp(enteredPassword, account.password) == 0) {
+      printf("Welcome back %s! Logging you in\n", account.firstname);fflush(stdout);
+      correctPassword = true;
+      return account;
+    }
+    else {
+      printf("Please try again.\n");
+    }
+
+
+  } while (!correctPassword);
 }
 
 int main() {
   BankAccount Accounts[100] = {-1};
-  BankAccount activeAccount;
+  BankAccount activeAccount = {-1};
 
 
   while (true) {
@@ -107,6 +135,7 @@ int main() {
     }
     else if (welcomeScreenChoice == 3) {
       exitProgram();
+      break;
     }
   }
   return 0;
