@@ -4,6 +4,15 @@
 #include <stdbool.h>
 #include <string.h>
 
+typedef struct {
+  int id;
+  char firstname[50];
+  char lastname[50];
+  char email[50];
+  char password[50];
+  float balance;
+} BankAccount;
+
 int printWelcomeScreen() {
   int choice;
   int validChoices[] = {1,2,3};
@@ -32,19 +41,34 @@ int printWelcomeScreen() {
   return choice;
 }
 
+int printLoggedInScreen(BankAccount account, BankAccount accounts[]) {
+  int choice;
+  int validChoices[] = {1,2,3,4,5};
+  int n = sizeof(validChoices) / sizeof(validChoices[0]);
+  bool validChoice;
+
+  system("cls");
+  fflush(stdout);
+
+  printf("Welcome to the back %49s\n", account.firstname);
+  printf("Press 1 to make a deposit");
+  printf("Press 2 to make a withdrawal");
+  printf("Press 3 to view transaction history");
+  printf("Press 4 to log out");
+  printf("Press 5 to exit");
+  scanf("%d", &choice);
+
+
+
+
+  return choice;
+}
+
 void exitProgram() {
   system("cls");fflush(stdout);
   printf("Thank you for your patronage\n");
   exit(0);
 }
-
-typedef struct {
-  int id;
-  char firstname[50];
-  char lastname[50];
-  char email[50];
-  char password[50];
-} BankAccount;
 
 BankAccount createAccount(BankAccount accounts[], int size) {
   BankAccount account;
@@ -124,6 +148,10 @@ int main() {
   BankAccount activeAccount = {-1};
 
   while (true) {
+    if (activeAccount.id != -1) {
+      printLoggedInScreen(activeAccount, Accounts);
+    }
+
     int welcomeScreenChoice = printWelcomeScreen();
     // 1- create an account 2- log into an account 3- log out of an account 4 -exit
     if (welcomeScreenChoice == 1) {
