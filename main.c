@@ -123,7 +123,6 @@ int main() {
   BankAccount Accounts[100] = {-1};
   BankAccount activeAccount = {-1};
 
-
   while (true) {
     int welcomeScreenChoice = printWelcomeScreen();
     // 1- create an account 2- log into an account 3- log out of an account 4 -exit
