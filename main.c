@@ -11,6 +11,7 @@ int printWelcomeScreen() {
   bool validChoice;
   //This should print the GUI onto the terminal
   system("cls");//Clears the terminal
+  fflush(stdout);
   printf("Welcome to the Bank of Florida\n");
   printf("Press 1 to create an account\n");
   printf("Press 2 to log into an account\n");
@@ -32,7 +33,7 @@ int printWelcomeScreen() {
 }
 
 void exitProgram() {
-  system("cls");
+  system("cls");fflush(stdout);
   printf("Thank you for your patronage\n");
   exit(0);
 }
@@ -73,11 +74,11 @@ BankAccount createAccount(BankAccount accounts[], int size) {
 }
 
 BankAccount loginToAccount(BankAccount accounts[], int size) {
-  char email[50];
   bool emailFound = false;
   BankAccount account;
-  system("cls");
+  system("cls");fflush(stdout);
   do {
+    char email[50];
     printf("Please enter the email of your account, please be mindful of capitalization");fflush(stdout);
     scanf("%49s", email);
 
@@ -108,7 +109,6 @@ BankAccount loginToAccount(BankAccount accounts[], int size) {
 
     if (strcmp(enteredPassword, account.password) == 0) {
       printf("Welcome back %s! Logging you in\n", account.firstname);fflush(stdout);
-      correctPassword = true;
       return account;
     }
     else {
@@ -116,7 +116,7 @@ BankAccount loginToAccount(BankAccount accounts[], int size) {
     }
 
 
-  } while (!correctPassword);
+  } while (true);
 }
 
 int main() {
