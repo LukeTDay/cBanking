@@ -11,7 +11,7 @@ typedef struct {
   char email[50];
   char password[50];
   float balance;
-  int transactionHistory[10];
+  float transactionHistory[10];
 } BankAccount;
 
 int printWelcomeScreen() {
@@ -74,6 +74,40 @@ void exitProgram() {
   system("cls");fflush(stdout);
   printf("Thank you for your patronage\n");
   exit(0);
+}
+
+void fillTransactionHistory(BankAccount *account, float nonZeroNumber){
+  if (nonZeroNumber = 0){
+    printf("Error... 0 was submitted for fillTransactionHistory() ");
+    exit(0);
+  }
+  for (int i = 0; i < 10; i++){
+    if (account->transactionHistory[i] == 0){
+      account->transactionHistory[i] = nonZeroNumber;
+      return;
+    }
+  }
+  for (int i = 9; i > 0; i--){
+      account->transactionHistory[i+1] = account->transactionHistory[i];
+
+    }
+    account->transactionHistory[0] = nonZeroNumber;
+    return;
+}
+
+void makeADeposit(BankAccount *account) {
+  system("cls");
+  float depositAmount = 0.0f;
+  do {
+      printf("How much money would you like to deposit? ");
+      scanf("%f", &depositAmount);
+      if (depositAmount > 0){
+        account->balance += depositAmount;
+        fillTransactionHistory(account, depositAmount);
+        printf("Hey %s thank you for depositing %.2f, you currently have a balance of %.2f", account->firstname, depositAmount, account->balance);
+        return;
+      }
+  } while (true);
 }
 
 BankAccount createAccount(BankAccount accounts[], int size) {
@@ -170,7 +204,12 @@ int main() {
   
   while (true) {
     if (activeAccount.id != -1) {
-      printLoggedInScreen(activeAccount);
+      int loggedInSelection = -1;
+      loggedInSelection = printLoggedInScreen(activeAccount);
+
+      if (loggedInSelection == 1){
+        makeADeposit(&activeAccount);
+      }
       continue;
     }
 
