@@ -42,7 +42,7 @@ int printWelcomeScreen() {
   return choice;
 }
 
-int printLoggedInScreen(BankAccount account, BankAccount accounts[]) {
+int printLoggedInScreen(BankAccount account) {
   int choice;
   int validChoices[] = {1,2,3,4,5};
   int n = sizeof(validChoices) / sizeof(validChoices[0]);
@@ -136,8 +136,6 @@ BankAccount loginToAccount(BankAccount accounts[], int size) {
     }
   } while (!emailFound);
 
-  bool correctPassword = false;
-
   do {
     char enteredPassword[50];
     printf("Please enter the password for the account associated with %s", account.email);fflush(stdout);
@@ -156,15 +154,27 @@ BankAccount loginToAccount(BankAccount accounts[], int size) {
 }
 
 int main() {
-  BankAccount Accounts[100] = {-1};
-  BankAccount activeAccount = {-1};
-  BankAccount tempAccount = {1,"Luke", "Day", "luke@gmail.com", "1234", 0};
-  activeAccount = tempAccount;
+  BankAccount Accounts[100];
+  for (int i = 0; i < 100; i++) {
+    Accounts[i].id = -1;
+    Accounts[i].firstname[0] = '\0';
+    Accounts[i].lastname[0] = '\0';
+    Accounts[i].email[0] = '\0';
+    Accounts[i].password[0] = '\0';
+    Accounts[i].balance = 0.0f;
+    for (int j = 0; j < 10; j++) {
+        Accounts[i].transactionHistory[j] = 0;
+    }
+}
+  BankAccount activeAccount = Accounts[0];
+  
   while (true) {
     if (activeAccount.id != -1) {
-      printLoggedInScreen(activeAccount, Accounts);
+      printLoggedInScreen(activeAccount);
+      continue;
     }
 
+    
     int welcomeScreenChoice = printWelcomeScreen();
     // 1- create an account 2- log into an account 3- log out of an account 4 -exit
     if (welcomeScreenChoice == 1) {
