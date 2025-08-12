@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <string.h>
+#include <windows.h>
 
 typedef struct {
   int id;
@@ -105,9 +106,34 @@ void makeADeposit(BankAccount *account) {
         account->balance += depositAmount;
         fillTransactionHistory(account, depositAmount);
         printf("Hey %s thank you for depositing %.2f, you currently have a balance of %.2f", account->firstname, depositAmount, account->balance);
+        Sleep(1000);
         return;
       }
+      else{
+        
+      }
   } while (true);
+}
+
+void makeAWithdrawl(BankAccount *account){
+  system("cls");
+  float withdrawlAmount = 0.0f;
+
+  do{
+    printf("Please enter the amount that you would like to withdrawl. You currently have a balance of %.2f$", account->balance);
+    scanf("%f", &withdrawlAmount);
+
+    if (withdrawlAmount <= 0){
+      printf("Make sure to enter a positive amount of money");
+      Sleep(1000);    
+      continue;
+    }
+    if ((account->balance - withdrawlAmount) < 0){
+      printf("Insufficient Funds");
+      printf("%.2f - %.2f = %.2f", account->balance, withdrawlAmount, (account->balance - withdrawlAmount));
+      Sleep(1000);      
+    }
+  }while(true);
 }
 
 BankAccount createAccount(BankAccount accounts[], int size) {
@@ -209,6 +235,12 @@ int main() {
 
       if (loggedInSelection == 1){
         makeADeposit(&activeAccount);
+      }
+      else if (loggedInSelection == 2){
+        makeAWithdrawl(&activeAccount);
+      }
+      else if (loggedInSelection == 5){
+        exitProgram();
       }
       continue;
     }
