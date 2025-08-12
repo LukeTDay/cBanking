@@ -43,7 +43,7 @@ int printWelcomeScreen() {
   return choice;
 }
 
-int printLoggedInScreen(BankAccount account) {
+int printLoggedInScreen(BankAccount *account) {
   int choice;
   int validChoices[] = {1,2,3,4,5};
   int n = sizeof(validChoices) / sizeof(validChoices[0]);
@@ -53,7 +53,7 @@ int printLoggedInScreen(BankAccount account) {
   fflush(stdout);
   do {
     validChoice = false;
-    printf("Welcome back %s!\n", account.firstname);
+    printf("Welcome back %s!\n", account->firstname);
     printf("Press 1 to make a deposit\n");
     printf("Press 2 to make a withdrawal\n");
     printf("Press 3 to view transaction history\n");
@@ -78,7 +78,7 @@ void exitProgram() {
 }
 
 void fillTransactionHistory(BankAccount *account, float nonZeroNumber){
-  if (nonZeroNumber = 0){
+  if (nonZeroNumber == 0){
     printf("Error... 0 was submitted for fillTransactionHistory() ");
     exit(0);
   }
@@ -88,7 +88,7 @@ void fillTransactionHistory(BankAccount *account, float nonZeroNumber){
       return;
     }
   }
-  for (int i = 9; i > 0; i--){
+  for (int i = 8; i >= 0; i--){
       account->transactionHistory[i+1] = account->transactionHistory[i];
 
     }
@@ -102,16 +102,16 @@ void makeADeposit(BankAccount *account) {
   do {
       printf("How much money would you like to deposit? ");
       scanf("%f", &depositAmount);
-      if (depositAmount > 0){
+      if (depositAmount > 0.0f){
         account->balance += depositAmount;
         fillTransactionHistory(account, depositAmount);
         printf("Hey %s thank you for depositing %.2f, you currently have a balance of %.2f", account->firstname, depositAmount, account->balance);
-        Sleep(1000);
+        Sleep(3000);
         return;
       }
-      else{
-        
-      }
+      printf("Make sure that you are depositing more than 0 dollars\n");
+      fflush(stdout);
+      Sleep(3000);
   } while (true);
 }
 
@@ -124,14 +124,21 @@ void makeAWithdrawl(BankAccount *account){
     scanf("%f", &withdrawlAmount);
 
     if (withdrawlAmount <= 0){
-      printf("Make sure to enter a positive amount of money");
-      Sleep(1000);    
+      printf("Make sure to enter a positive amount of money\n");
+      Sleep(5000);    
       continue;
     }
-    if ((account->balance - withdrawlAmount) < 0){
-      printf("Insufficient Funds");
-      printf("%.2f - %.2f = %.2f", account->balance, withdrawlAmount, (account->balance - withdrawlAmount));
-      Sleep(1000);      
+    else if ((account->balance - withdrawlAmount) < 0){
+      printf("Insufficient Funds\n");
+      printf("%.2f - %.2f = %.2f\n", account->balance, withdrawlAmount, (account->balance - withdrawlAmount));
+      Sleep(5000);      
+    }
+    else {
+      printf("Thansk you for withdrawing %.2f dollars. You now have a current balance of %.2f\n", withdrawlAmount, account->balance-withdrawlAmount);
+      account->balance = account->balance - withdrawlAmount;
+      fillTransactionHistory(account,-1*withdrawlAmount);
+      Sleep(5000);
+      return;
     }
   }while(true);
 }
@@ -231,13 +238,19 @@ int main() {
   while (true) {
     if (activeAccount.id != -1) {
       int loggedInSelection = -1;
-      loggedInSelection = printLoggedInScreen(activeAccount);
+      loggedInSelection = printLoggedInScreen(&Accounts[activeAccount.id]);
 
       if (loggedInSelection == 1){
-        makeADeposit(&activeAccount);
+        makeADeposit(&Accounts[activeAccount.id]);
       }
       else if (loggedInSelection == 2){
-        makeAWithdrawl(&activeAccount);
+        makeAWithdrawl(&Accounts[activeAccount.id]);
+      }
+      else if (loggedInSelection == 3){
+        viewTranasactionHistory(&Accounts[activeAccount.id]);
+      }
+      else if (loggedInSelection == 4){
+        activeAccount.id = -1;
       }
       else if (loggedInSelection == 5){
         exitProgram();
@@ -249,9 +262,11 @@ int main() {
     int welcomeScreenChoice = printWelcomeScreen();
     // 1- create an account 2- log into an account 3- log out of an account 4 -exit
     if (welcomeScreenChoice == 1) {
+      //TODO Pass pointer
       activeAccount = createAccount(Accounts, (sizeof(Accounts) / sizeof(Accounts[0])));
     }
     else if (welcomeScreenChoice == 2) {
+      //TODO Pass Pointer
       activeAccount = loginToAccount(Accounts, (sizeof(Accounts) / sizeof(Accounts[0])));
     }
     else if (welcomeScreenChoice == 3) {
