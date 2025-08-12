@@ -4,7 +4,6 @@
 #include <stdbool.h>
 #include <string.h>
 #include <windows.h>
-
 typedef struct {
   int id;
   char firstname[50];
@@ -143,6 +142,29 @@ void makeAWithdrawl(BankAccount *account){
   }while(true);
 }
 
+void viewTransactionHistory(BankAccount *account){
+  system("cls");
+  printf("This is the history of the account\n", account->email);
+  for(int i = 0; i < 10; i++){
+    if (account->transactionHistory[i] == 0){
+      printf("That it the complete history of your account...\n");
+      Sleep(5000);
+      return;
+    }
+    else if (account->transactionHistory[i] > 0){
+      printf("Deposited %.2f $\n", account->transactionHistory[i]);
+      Sleep(500);
+    }
+    else if (account->transactionHistory[i] < 0){
+      printf("Withdrew %.2f $\n", -1 * account->transactionHistory[i]);
+      Sleep(500);
+    }
+  }
+  printf("That it the complete history of your account...\n");
+  Sleep(5000);
+  return;
+}
+
 BankAccount createAccount(BankAccount accounts[], int size) {
   BankAccount account;
 
@@ -247,7 +269,7 @@ int main() {
         makeAWithdrawl(&Accounts[activeAccount.id]);
       }
       else if (loggedInSelection == 3){
-        viewTranasactionHistory(&Accounts[activeAccount.id]);
+        viewTransactionHistory(&Accounts[activeAccount.id]);
       }
       else if (loggedInSelection == 4){
         activeAccount.id = -1;
